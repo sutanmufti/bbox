@@ -288,11 +288,17 @@ function copyDivTextContent(divId: string): void {
   // Clean up by removing the temporary textarea
   document.body.removeChild(textarea);
 
-  console.log(`Text content of div with id '${divId}' has been copied to the clipboard.`);
+  alert(`Copied to Clipboard`);
 }
 
-// Example usage
-// copyDivTextContent("yourDivId");
+document.getElementById("copybbox")?.addEventListener("click", () => {
+  copyDivTextContent("bbox");
+});
+
+document.getElementById("copygeojson")?.addEventListener("click", () => {
+  copyDivTextContent("bboxgeojson");
+});
+
 
 
 function formatNumber(num: number) {
