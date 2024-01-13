@@ -29,6 +29,9 @@ jobs:
 
     - name: Install Dependencies
       run: npm install
+    
+    - name: build tailwind
+      run: npx tailwindcss -i ./src/input.css -o ./src/output.css
 
     - name: Build
       run: npm run build
