@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -6,26 +6,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DrawBBOX by RDS</title>
   </head>
-  <body class="flex w-screen h-screen">
+  <body class="flex w-screen h-screen max-w-screen max-h-screen">
     <div class="grow w-full h-full" id="map"></div>
-    <div class="w-[400px] max-h-screen overflow-x-auto">
-      drawing tool
-
-      <div>
-        <p>
-          Bbox:
-        </p>
-        <code id="bbox" class="p-2 bg-gray-300 rounded-md border block m-2">
-
+    <div class="max-h-screen">
+    <div class="w-[400px] max-h-screen flex flex-col">
+      <div class="grow">
+        <div class="bg-gray-200 hover:bg-gray-400 cursor-pointer p-2 active:bg-slate-600 active:text-white">
+          Copy BBOX
+        </div>
+        <p class="px-2">Bbox:</p>
+        <code
+          id="bbox"
+          class="p-2 bg-gray-300 rounded-md border block m-2 overflow-x-auto"
+        >
         </code>
       </div>
 
-      <div class="max-w-xl mx-auto">
-        <div class="bg-white p-4 rounded shadow">
-            <pre id="bboxgeojson" id="output" class="p-5 text-sm text-gray-800 overflow-x-auto whitespace-pre-wrap"></pre>
+      <div class="w-full mx-auto grow-0 border my-2">
+        <div class="bg-gray-200 hover:bg-gray-400 cursor-pointer p-2 active:bg-slate-600 active:text-white">
+          Copy GeoJSON
         </div>
+        <p class="px-2">GeoJSON:</p>
+        <pre
+          id="bboxgeojson"
+          id="output"
+          class="p-2 bg-gray-300 rounded-md border block m-2 overflow-x-auto max-h-[300px]"
+        ></pre>
+      </div>
     </div>
-    
+  </div>
+
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

@@ -21,9 +21,12 @@ mapboxgl.accessToken = mapboxtoken
 const map = new mapboxgl.Map({
   container: "map",
   style: "mapbox://styles/mapbox/light-v10",
-  center: [0, 0],
-  zoom: 1,
+  center: [-0.111458, 51.506923,],
+  zoom: 13,
 });
+
+const nav = new mapboxgl.NavigationControl();
+map.addControl(nav, 'bottom-left');
 
 map.on("load", function () {
   map.addControl(clearControlControl, "top-right");
@@ -92,6 +95,41 @@ map.on("load", function () {
   });
 
   map.addLayer({
+    'id': 'myLabelLayer',
+    'type': 'symbol',
+    'source': 'bboxlive',
+    'layout': {
+        'text-field': 'My label', // Replace with the property name from your GeoJSON
+        'text-size': 12,
+        'text-anchor': 'center',
+        'text-offset': [0, 0],
+        "text-allow-overlap": true,
+        "text-ignore-placement": true,
+    },
+    'paint': {
+        'text-color': '#000000'
+    }
+});
+
+map.addLayer({
+  'id': 'myLabelLayer2',
+  'type': 'symbol',
+  'source': 'boxfeature',
+  'layout': {
+      'text-field': 'My label', // Replace with the property name from your GeoJSON
+      'text-size': 12,
+      'text-anchor': 'center',
+      'text-offset': [0, 0],
+      "text-allow-overlap": true,
+      "text-ignore-placement": true,
+      "visibility": "none"
+  },
+  'paint': {
+      'text-color': '#000000'
+  }
+});
+
+  map.addLayer({
     id: "points",
     type: "circle",
     source: "points",
@@ -101,17 +139,6 @@ map.on("load", function () {
     },
   });
 });
-
-function generatePoint(lat: number, lng: number) {
-  return {
-    type: "Feature" as const,
-    properties: {},
-    geometry: {
-      type: "Point",
-      coordinates: [lng, lat],
-    },
-  };
-}
 
 function setSourceData() {
   const source = map.getSource("points") as mapboxgl.GeoJSONSource;
@@ -139,6 +166,8 @@ function generateBbox() {
   const bboxPolygon = turf.bboxPolygon(boundingBox);
   const bboxSource = map.getSource("boxfeature") as mapboxgl.GeoJSONSource;
   bboxSource.setData(bboxPolygon);
+
+  return { bboxPolygon, boundingBox };
 }
 
 function generateLiveBbox() {
@@ -174,13 +203,31 @@ map.on("click", function (e) {
       generateLiveBbox();
     }
 
+
+    if (coordinateArray.length === 2) {
+
+      const { bboxPolygon, boundingBox } = generateBbox();
+      
+      const {format, value} = formatNumber(turf.area(bboxPolygon))
+      const {format: formatAcre, value: valueAcre} = formatNumberAcre(turf.area(bboxPolygon))
+      
+      map.setLayoutProperty("myLabelLayer2", 'visibility', `visible`);
+      map.setLayoutProperty("myLabelLayer2", 'text-field', `area: ${value} ${format} / ${valueAcre} ${formatAcre}`);
+    }
+
+    
+
+    
+
     setSourceData();
+    
   } else {
     coordinateArray = [];
     liveCoorindateArray = [];
     generateLiveBbox();
     // coordinateArray.push([e.lngLat.lng,e.lngLat.lat])
     setSourceData();
+    map.setLayoutProperty("myLabelLayer2", 'visibility', `none`);
     drawMode = false;
   }
 
@@ -208,5 +255,68 @@ map.on("mousemove", function (e) {
     if (bboxgeojsondiv) {
       bboxgeojsondiv.innerHTML = JSON.stringify({type,properties,geometry}, null, 2);
     }
+
+    const {format, value} = formatNumber(turf.area(bboxPolygon))
+    const {format: formatAcre, value: valueAcre} = formatNumberAcre(turf.area(bboxPolygon))
+
+    map.setLayoutProperty("myLabelLayer", 'text-field', `area: ${value} ${format} / ${valueAcre} ${formatAcre}`);
+
+    
+  
   }
 });
+
+
+
+function copyDivTextContent(divId: string): void {
+  // Find the div element by its ID
+  const div = document.getElementById(divId);
+  if (!div) {
+      console.error(`No div found with id: ${divId}`);
+      return;
+  }
+
+  // Create a temporary textarea element to copy the text
+  const textarea = document.createElement("textarea");
+  textarea.value = div.textContent || '';
+  document.body.appendChild(textarea);
+
+  // Select and copy the text
+  textarea.select();
+  document.execCommand('copy');
+
+  // Clean up by removing the temporary textarea
+  document.body.removeChild(textarea);
+
+  console.log(`Text content of div with id '${divId}' has been copied to the clipboard.`);
+}
+
+// Example usage
+// copyDivTextContent("yourDivId");
+
+
+function formatNumber(num: number) {
+
+  const valueToBeFormated = (num > 10000) ? num / 10000 : num;
+
+  const value =valueToBeFormated.toLocaleString('en-US', {
+    maximumFractionDigits: 2, // Change this value to set the number of decimal places
+    minimumFractionDigits: 2 // Ensures decimal part is always shown
+  });
+
+  const format = (num > 10000) ?  'Hectare' : 'm²';
+  return {value, format}
+}
+
+function formatNumberAcre(num: number) {
+
+  const valueToBeFormated = num / 4047
+
+  const value =valueToBeFormated.toLocaleString('en-US', {
+    maximumFractionDigits: 2, // Change this value to set the number of decimal places
+    minimumFractionDigits: 2 // Ensures decimal part is always shown
+  });
+
+  const format = 'acre'
+  return {value, format}
+}
