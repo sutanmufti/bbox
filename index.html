@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/logo_rds.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DrawBBOX by RDS</title>
+  </head>
+  <body class="flex w-screen h-screen">
+    <div class="grow w-full h-full" id="map"></div>
+    <div class="w-[400px] max-h-screen overflow-x-auto">
+      drawing tool
+
+      <div>
+        <p>
+          Bbox:
+        </p>
+        <code id="bbox" class="p-2 bg-gray-300 rounded-md border block m-2">
+
+        </code>
+      </div>
+
+      <div class="max-w-xl mx-auto">
+        <div class="bg-white p-4 rounded shadow">
+            <pre id="bboxgeojson" id="output" class="p-5 text-sm text-gray-800 overflow-x-auto whitespace-pre-wrap"></pre>
+        </div>
+    </div>
+    
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
