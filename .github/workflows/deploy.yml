@@ -5,20 +5,25 @@ on:
     branches:
       - main
 
+
+permissions:
+  contents: write
+
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout Source Code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Create mapboxgltoken.ts File
       run: |
         echo "export default '${{ secrets.MAPBOXTOKEN }}';" > src/mapboxtoken.ts
 
     - name: Set up Node.js
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v4
       with:
         node-version: '18'
 
@@ -29,7 +34,7 @@ jobs:
       run: npm run build
 
     - name: Deploy to GitHub Pages
-      uses: JamesIves/github-pages-deploy-action@4.1.4
+      uses: JamesIves/github-pages-deploy-action@v4
       with:
-        branch: main
+        # branch: main
         folder: dist
