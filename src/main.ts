@@ -51,9 +51,6 @@ map.on("load", function () {
     },
   });
 
-  console.log("loggin point source:");
-  console.log("point source:", map.getSource("points"));
-
   map.addSource("boxfeature", {
     type: "geojson",
     data: {
@@ -157,7 +154,6 @@ function generateBbox() {
     turf.helpers.point([lng, lat])
   );
 
-  console.log("features:", features);
   const featureCollection = {
     type: "FeatureCollection" as const,
     features: points,
@@ -292,10 +288,12 @@ function copyDivTextContent(divId: string): void {
 }
 
 document.getElementById("copybbox")?.addEventListener("click", () => {
+  console.log("copybbox copied")
   copyDivTextContent("bbox");
 });
 
 document.getElementById("copygeojson")?.addEventListener("click", () => {
+  console.log("bboxgeojson copied")
   copyDivTextContent("bboxgeojson");
 });
 
