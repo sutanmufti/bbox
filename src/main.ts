@@ -1,6 +1,5 @@
 import "./output.css";
 import "mapbox-gl/dist/mapbox-gl.css";
-import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import * as turf from "@turf/turf";
 import mapboxgl from "mapbox-gl";
 import clearControl from "./control";
