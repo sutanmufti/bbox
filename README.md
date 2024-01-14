@@ -4,6 +4,8 @@
 
 Bounding box tool by ceritapeta.co.uk. This tool can be used to generate bounding box coordinates and geojson.
 
+<img src='./bbox.gif' width="400">
+
 # Contributing Guide
 
 We use tailwind and vite with typescript to develop this app. Requirement:
